@@ -1,0 +1,595 @@
+/* 数据集详情页面专用样式 */
+
+/* 面包屑导航 */
+.breadcrumb-section {
+    padding: 20px 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.breadcrumb a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb a:hover {
+    color: var(--accent-green);
+}
+
+.breadcrumb i {
+    color: var(--primary-blue);
+    font-size: 0.8rem;
+}
+
+.breadcrumb span {
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+/* 数据集头部信息 */
+.dataset-header {
+    padding: 40px 0;
+    background: var(--gradient-primary);
+}
+
+.dataset-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    background: var(--gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px var(--shadow-light);
+}
+
+.dataset-title-section h1 {
+    font-size: 2.5rem;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    line-height: 1.3;
+}
+
+.dataset-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.dataset-meta .author {
+    color: var(--primary-blue);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.dataset-meta .year {
+    color: var(--deep-blue);
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 5px 12px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.dataset-actions {
+    display: flex;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+/* 详细信息区域 */
+.dataset-details {
+    padding: 60px 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+/* 信息卡片 */
+.info-card {
+    background: var(--gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px var(--shadow-light);
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px var(--shadow-medium);
+}
+
+.info-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    color: var(--text-dark);
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--glass-border);
+}
+
+.info-card h3 i {
+    color: var(--accent-green);
+    font-size: 1.1rem;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-item label {
+    font-weight: 600;
+    color: var(--text-dark);
+    min-width: 100px;
+}
+
+.info-item span {
+    color: var(--deep-blue);
+    text-align: right;
+}
+
+.external-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.external-link:hover {
+    color: var(--accent-green);
+}
+
+/* 图表控制面板 */
+.chart-controls {
+    background: var(--gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px var(--shadow-light);
+}
+
+.chart-controls h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    color: var(--text-dark);
+    margin-bottom: 25px;
+}
+
+.chart-controls h3 i {
+    color: var(--accent-green);
+}
+
+.chart-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.chart-tab {
+    padding: 10px 20px;
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.chart-tab:hover {
+    background: rgba(124, 179, 66, 0.2);
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+}
+
+.chart-tab.active {
+    background: var(--accent-green);
+    color: white;
+    border-color: var(--accent-green);
+}
+
+.chart-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.option-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.option-group label {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+.option-group select,
+.option-group input {
+    padding: 8px 12px;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+.option-group input[type="range"] {
+    padding: 0;
+}
+
+/* 图表容器 */
+.chart-container {
+    background: var(--gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 32px var(--shadow-light);
+    position: relative;
+    min-height: 500px;
+}
+
+.chart-area {
+    width: 100%;
+    height: 500px;
+    position: relative;
+}
+
+.chart-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--primary-blue);
+    z-index: 10;
+}
+
+.chart-loading i {
+    font-size: 2rem;
+    margin-bottom: 15px;
+    animation: spin 1s linear infinite;
+}
+
+.chart-loading p {
+    font-size: 1.1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 下载选项 */
+.download-options {
+    background: var(--gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 32px var(--shadow-light);
+}
+
+.download-options h4 {
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+.download-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.download-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 15px;
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.download-btn:hover {
+    background: rgba(124, 179, 66, 0.2);
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+    transform: translateY(-2px);
+}
+
+.download-btn i {
+    font-size: 1rem;
+}
+
+/* 元数据区域 */
+.metadata-section {
+    padding: 60px 0;
+    background: var(--gradient-primary);
+}
+
+.metadata-card {
+    background: var(--gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 32px var(--shadow-light);
+}
+
+.metadata-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    color: var(--text-dark);
+    margin-bottom: 30px;
+}
+
+.metadata-card h3 i {
+    color: var(--accent-green);
+}
+
+.metadata-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.metadata-item {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.metadata-item h4 {
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.metadata-item p {
+    color: var(--deep-blue);
+    line-height: 1.6;
+}
+
+/* 相关数据集区域 */
+.related-section {
+    padding: 60px 0;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2rem;
+    color: var(--text-dark);
+    margin-bottom: 40px;
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.related-card {
+    background: var(--gradient-card);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 25px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.related-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px var(--shadow-medium);
+}
+
+.related-card h4 {
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.related-card p {
+    color: var(--deep-blue);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+.related-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--primary-blue);
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .chart-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dataset-info {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .dataset-title-section h1 {
+        font-size: 2rem;
+    }
+    
+    .dataset-meta {
+        justify-content: flex-start;
+    }
+    
+    .dataset-actions {
+        justify-content: center;
+    }
+    
+    .info-card,
+    .chart-controls,
+    .chart-container,
+    .download-options {
+        padding: 20px;
+    }
+    
+    .chart-area {
+        height: 400px;
+    }
+    
+    .chart-tabs {
+        justify-content: center;
+    }
+    
+    .download-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .metadata-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .dataset-title-section h1 {
+        font-size: 1.5rem;
+    }
+    
+    .dataset-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .chart-area {
+        height: 300px;
+    }
+    
+    .chart-tab {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+    }
+}
+
+/* 状态徽章样式 */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-reproduced {
+    background: rgba(124, 179, 66, 0.2);
+    color: var(--accent-green);
+    border: 1px solid var(--accent-green);
+}
+
+.status-reproducing {
+    background: rgba(255, 193, 7, 0.2);
+    color: #FF8C00;
+    border: 1px solid #FF8C00;
+}
+
+.status-not-reproduced {
+    background: rgba(220, 53, 69, 0.2);
+    color: #DC3545;
+    border: 1px solid #DC3545;
+}
+
+/* 加载动画 */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-content {
+    text-align: center;
+    color: var(--primary-blue);
+}
+
+.loading-content i {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    animation: spin 1s linear infinite;
+}
+
+.loading-content p {
+    font-size: 1.2rem;
+}

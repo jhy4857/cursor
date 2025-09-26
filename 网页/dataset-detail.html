@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据集详情 - 单细胞组学数据集平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="detail.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <!-- 水波背景效果 -->
+    <div class="water-background">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-dna"></i>
+                <span>单细胞组学平台</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="datasets.html" class="nav-link">数据集列表</a>
+                </li>
+                <li class="nav-item">
+                    <a href="submit.html" class="nav-link">提交数据集</a>
+                </li>
+                <li class="nav-item">
+                    <a href="login.html" class="nav-link">登录</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 面包屑导航 -->
+        <section class="breadcrumb-section">
+            <div class="container">
+                <nav class="breadcrumb">
+                    <a href="index.html">首页</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <a href="datasets.html">数据集列表</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span id="breadcrumbTitle">数据集详情</span>
+                </nav>
+            </div>
+        </section>
+
+        <!-- 数据集基本信息 -->
+        <section class="dataset-header">
+            <div class="container">
+                <div class="dataset-info">
+                    <div class="dataset-title-section">
+                        <h1 id="datasetTitle">数据集标题</h1>
+                        <div class="dataset-meta">
+                            <span class="author" id="datasetAuthor">作者</span>
+                            <span class="year" id="datasetYear">年份</span>
+                            <span class="status-badge" id="datasetStatus">状态</span>
+                        </div>
+                    </div>
+                    <div class="dataset-actions">
+                        <button class="btn btn-primary" id="downloadBtn">
+                            <i class="fas fa-download"></i>
+                            下载数据
+                        </button>
+                        <button class="btn btn-secondary" id="shareBtn">
+                            <i class="fas fa-share"></i>
+                            分享
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据集详细信息 -->
+        <section class="dataset-details">
+            <div class="container">
+                <div class="details-grid">
+                    <!-- 左侧信息 -->
+                    <div class="details-left">
+                        <!-- 文献信息 -->
+                        <div class="info-card">
+                            <h3><i class="fas fa-book"></i> 文献信息</h3>
+                            <div class="info-content">
+                                <div class="info-item">
+                                    <label>期刊:</label>
+                                    <span id="journal">期刊名称</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>DOI:</label>
+                                    <a href="#" id="doiLink" class="doi-link">DOI链接</a>
+                                </div>
+                                <div class="info-item">
+                                    <label>发表日期:</label>
+                                    <span id="publishDate">日期</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>引用次数:</label>
+                                    <span id="citationCount">次数</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 数据源信息 -->
+                        <div class="info-card">
+                            <h3><i class="fas fa-database"></i> 数据源信息</h3>
+                            <div class="info-content">
+                                <div class="info-item">
+                                    <label>物种:</label>
+                                    <span id="species">物种</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>平台:</label>
+                                    <span id="platform">平台</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>样本数:</label>
+                                    <span id="sampleCount">数量</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>细胞数:</label>
+                                    <span id="cellCount">数量</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>数据链接:</label>
+                                    <a href="#" id="dataLink" class="external-link">访问数据</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 复现信息 -->
+                        <div class="info-card">
+                            <h3><i class="fas fa-code"></i> 复现信息</h3>
+                            <div class="info-content">
+                                <div class="info-item">
+                                    <label>复现状态:</label>
+                                    <span class="status-badge" id="reproStatus">状态</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>复现代码:</label>
+                                    <a href="#" id="codeLink" class="external-link">查看代码</a>
+                                </div>
+                                <div class="info-item">
+                                    <label>环境要求:</label>
+                                    <span id="envRequirements">要求</span>
+                                </div>
+                                <div class="info-item">
+                                    <label>复现时间:</label>
+                                    <span id="reproTime">时间</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右侧图表 -->
+                    <div class="details-right">
+                        <!-- 图表控制面板 -->
+                        <div class="chart-controls">
+                            <h3><i class="fas fa-chart-line"></i> 数据可视化</h3>
+                            <div class="chart-tabs">
+                                <button class="chart-tab active" data-chart="pca">PCA图</button>
+                                <button class="chart-tab" data-chart="heatmap">热图</button>
+                                <button class="chart-tab" data-chart="violin">小提琴图</button>
+                                <button class="chart-tab" data-chart="umap">UMAP图</button>
+                            </div>
+                            <div class="chart-options">
+                                <div class="option-group">
+                                    <label for="colorBy">颜色分组:</label>
+                                    <select id="colorBy">
+                                        <option value="cell_type">细胞类型</option>
+                                        <option value="sample">样本</option>
+                                        <option value="cluster">聚类</option>
+                                    </select>
+                                </div>
+                                <div class="option-group">
+                                    <label for="pointSize">点大小:</label>
+                                    <input type="range" id="pointSize" min="1" max="10" value="3">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 图表容器 -->
+                        <div class="chart-container">
+                            <div id="chartArea" class="chart-area">
+                                <!-- Plotly图表将在这里渲染 -->
+                            </div>
+                            <div class="chart-loading" id="chartLoading">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>正在加载图表...</p>
+                            </div>
+                        </div>
+
+                        <!-- 图表下载选项 -->
+                        <div class="download-options">
+                            <h4>下载选项</h4>
+                            <div class="download-buttons">
+                                <button class="download-btn" data-format="png">
+                                    <i class="fas fa-image"></i>
+                                    PNG图片
+                                </button>
+                                <button class="download-btn" data-format="svg">
+                                    <i class="fas fa-vector-square"></i>
+                                    SVG矢量图
+                                </button>
+                                <button class="download-btn" data-format="html">
+                                    <i class="fas fa-code"></i>
+                                    HTML源码
+                                </button>
+                                <button class="download-btn" data-format="data">
+                                    <i class="fas fa-table"></i>
+                                    原始数据
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 元数据概览 -->
+        <section class="metadata-section">
+            <div class="container">
+                <div class="metadata-card">
+                    <h3><i class="fas fa-info-circle"></i> 元数据概览</h3>
+                    <div class="metadata-content" id="metadataContent">
+                        <!-- 动态加载元数据 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 相关数据集 -->
+        <section class="related-section">
+            <div class="container">
+                <h3 class="section-title">相关数据集</h3>
+                <div class="related-grid" id="relatedDatasets">
+                    <!-- 动态加载相关数据集 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于我们</h3>
+                    <p>致力于单细胞组学数据共享与复现的开放平台</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="datasets.html">数据集列表</a></li>
+                        <li><a href="submit.html">提交数据</a></li>
+                        <li><a href="login.html">用户登录</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系方式</h3>
+                    <p>邮箱: contact@scrnaseq.org</p>
+                    <p>电话: +86-xxx-xxxx-xxxx</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 单细胞组学数据集平台. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="detail.js"></script>
+</body>
+</html>

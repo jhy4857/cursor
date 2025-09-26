@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单细胞组学数据集平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <!-- 水波背景效果 -->
+    <div class="water-background">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-dna"></i>
+                <span>单细胞组学平台</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link active">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="datasets.html" class="nav-link">数据集列表</a>
+                </li>
+                <li class="nav-item">
+                    <a href="submit.html" class="nav-link">提交数据集</a>
+                </li>
+                <li class="nav-item">
+                    <a href="login.html" class="nav-link">登录</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">单细胞组学数据集平台</h1>
+                    <p class="hero-subtitle">探索、分享、复现单细胞组学研究数据</p>
+                    <div class="hero-buttons">
+                        <a href="datasets.html" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                            浏览数据集
+                        </a>
+                        <a href="submit.html" class="btn btn-secondary">
+                            <i class="fas fa-plus"></i>
+                            提交数据集
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="floating-cells">
+                        <div class="cell cell-1"></div>
+                        <div class="cell cell-2"></div>
+                        <div class="cell cell-3"></div>
+                        <div class="cell cell-4"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 网站介绍区域 -->
+        <section class="intro-section">
+            <div class="container">
+                <div class="intro-grid">
+                    <div class="intro-card">
+                        <div class="card-icon">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <h3>项目宗旨</h3>
+                        <p>为单细胞组学研究提供高质量的数据集和复现环境，促进科学研究的透明度和可重复性。</p>
+                    </div>
+                    <div class="intro-card">
+                        <div class="card-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3>数据集背景</h3>
+                        <p>收录来自全球研究者的单细胞RNA测序、单细胞ATAC-seq等组学数据，支持多物种、多平台分析。</p>
+                    </div>
+                    <div class="intro-card">
+                        <div class="card-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>复现支持</h3>
+                        <p>提供完整的复现代码和环境配置，确保研究结果的可重现性和科学严谨性。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 统计信息区域 -->
+        <section class="stats-section">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="156">0</div>
+                        <div class="stat-label">数据集数量</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="89">0</div>
+                        <div class="stat-label">已复现</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="12">0</div>
+                        <div class="stat-label">物种类型</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-target="2340">0</div>
+                        <div class="stat-label">用户数量</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 最新数据集预览 -->
+        <section class="preview-section">
+            <div class="container">
+                <h2 class="section-title">最新数据集</h2>
+                <div class="preview-grid" id="latestDatasets">
+                    <!-- 动态加载最新数据集 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于我们</h3>
+                    <p>致力于单细胞组学数据共享与复现的开放平台</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="datasets.html">数据集列表</a></li>
+                        <li><a href="submit.html">提交数据</a></li>
+                        <li><a href="login.html">用户登录</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系方式</h3>
+                    <p>邮箱: contact@scrnaseq.org</p>
+                    <p>电话: +86-xxx-xxxx-xxxx</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 单细胞组学数据集平台. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提交数据集 - 单细胞组学数据集平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="submit.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 水波背景效果 -->
+    <div class="water-background">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-dna"></i>
+                <span>单细胞组学平台</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="datasets.html" class="nav-link">数据集列表</a>
+                </li>
+                <li class="nav-item">
+                    <a href="submit.html" class="nav-link active">提交数据集</a>
+                </li>
+                <li class="nav-item">
+                    <a href="login.html" class="nav-link">登录</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 页面标题区域 -->
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">提交数据集</h1>
+                <p class="page-subtitle">分享您的单细胞组学数据集和复现代码</p>
+            </div>
+        </section>
+
+        <!-- 提交表单区域 -->
+        <section class="submit-section">
+            <div class="container">
+                <div class="submit-container">
+                    <!-- 进度指示器 -->
+                    <div class="progress-indicator">
+                        <div class="progress-step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-label">基本信息</div>
+                        </div>
+                        <div class="progress-step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-label">数据信息</div>
+                        </div>
+                        <div class="progress-step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-label">复现信息</div>
+                        </div>
+                        <div class="progress-step" data-step="4">
+                            <div class="step-number">4</div>
+                            <div class="step-label">确认提交</div>
+                        </div>
+                    </div>
+
+                    <!-- 表单容器 -->
+                    <form class="submit-form" id="submitForm">
+                        <!-- 步骤1: 基本信息 -->
+                        <div class="form-step active" data-step="1">
+                            <div class="step-header">
+                                <h3><i class="fas fa-info-circle"></i> 基本信息</h3>
+                                <p>请填写数据集的基本信息</p>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="datasetTitle">数据集标题 *</label>
+                                    <input type="text" id="datasetTitle" name="datasetTitle" required 
+                                           placeholder="请输入数据集的标题">
+                                    <div class="error-message" id="datasetTitleError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="authorName">作者姓名 *</label>
+                                    <input type="text" id="authorName" name="authorName" required 
+                                           placeholder="请输入作者姓名">
+                                    <div class="error-message" id="authorNameError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="authorEmail">作者邮箱 *</label>
+                                    <input type="email" id="authorEmail" name="authorEmail" required 
+                                           placeholder="请输入作者邮箱">
+                                    <div class="error-message" id="authorEmailError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="journalName">期刊名称</label>
+                                    <input type="text" id="journalName" name="journalName" 
+                                           placeholder="请输入期刊名称">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="publicationYear">发表年份 *</label>
+                                    <input type="number" id="publicationYear" name="publicationYear" required 
+                                           min="2000" max="2024" placeholder="2024">
+                                    <div class="error-message" id="publicationYearError"></div>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="doi">DOI链接</label>
+                                    <input type="url" id="doi" name="doi" 
+                                           placeholder="https://doi.org/10.xxx/xxx">
+                                    <div class="error-message" id="doiError"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 步骤2: 数据信息 -->
+                        <div class="form-step" data-step="2">
+                            <div class="step-header">
+                                <h3><i class="fas fa-database"></i> 数据信息</h3>
+                                <p>请填写数据集的技术信息</p>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="species">物种 *</label>
+                                    <select id="species" name="species" required>
+                                        <option value="">请选择物种</option>
+                                        <option value="人类">人类 (Homo sapiens)</option>
+                                        <option value="小鼠">小鼠 (Mus musculus)</option>
+                                        <option value="果蝇">果蝇 (Drosophila melanogaster)</option>
+                                        <option value="斑马鱼">斑马鱼 (Danio rerio)</option>
+                                        <option value="拟南芥">拟南芥 (Arabidopsis thaliana)</option>
+                                        <option value="其他">其他</option>
+                                    </select>
+                                    <div class="error-message" id="speciesError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="platform">测序平台 *</label>
+                                    <select id="platform" name="platform" required>
+                                        <option value="">请选择平台</option>
+                                        <option value="10X Genomics">10X Genomics</option>
+                                        <option value="Smart-seq2">Smart-seq2</option>
+                                        <option value="Drop-seq">Drop-seq</option>
+                                        <option value="CEL-seq2">CEL-seq2</option>
+                                        <option value="MARS-seq">MARS-seq</option>
+                                        <option value="其他">其他</option>
+                                    </select>
+                                    <div class="error-message" id="platformError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="sampleCount">样本数量 *</label>
+                                    <input type="number" id="sampleCount" name="sampleCount" required 
+                                           min="1" placeholder="样本数量">
+                                    <div class="error-message" id="sampleCountError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cellCount">细胞数量 *</label>
+                                    <input type="number" id="cellCount" name="cellCount" required 
+                                           min="1" placeholder="细胞数量">
+                                    <div class="error-message" id="cellCountError"></div>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="dataLink">数据链接 *</label>
+                                    <input type="url" id="dataLink" name="dataLink" required 
+                                           placeholder="https://example.com/data">
+                                    <div class="error-message" id="dataLinkError"></div>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="dataDescription">数据描述</label>
+                                    <textarea id="dataDescription" name="dataDescription" rows="4" 
+                                              placeholder="请简要描述数据集的内容、实验设计等信息"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 步骤3: 复现信息 -->
+                        <div class="form-step" data-step="3">
+                            <div class="step-header">
+                                <h3><i class="fas fa-code"></i> 复现信息</h3>
+                                <p>请提供复现代码和环境信息</p>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="reproStatus">复现状态 *</label>
+                                    <select id="reproStatus" name="reproStatus" required>
+                                        <option value="">请选择状态</option>
+                                        <option value="已复现">已复现</option>
+                                        <option value="复现中">复现中</option>
+                                        <option value="未复现">未复现</option>
+                                    </select>
+                                    <div class="error-message" id="reproStatusError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="reproTime">复现时间 (小时)</label>
+                                    <input type="number" id="reproTime" name="reproTime" 
+                                           min="0" step="0.5" placeholder="复现所需时间">
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="codeLink">复现代码链接</label>
+                                    <input type="url" id="codeLink" name="codeLink" 
+                                           placeholder="https://github.com/username/repo">
+                                    <div class="error-message" id="codeLinkError"></div>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="envRequirements">环境要求</label>
+                                    <textarea id="envRequirements" name="envRequirements" rows="4" 
+                                              placeholder="请描述运行环境要求，如R版本、Python版本、依赖包等"></textarea>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="reproNotes">复现说明</label>
+                                    <textarea id="reproNotes" name="reproNotes" rows="4" 
+                                              placeholder="请提供复现的详细说明、注意事项等"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 步骤4: 确认提交 -->
+                        <div class="form-step" data-step="4">
+                            <div class="step-header">
+                                <h3><i class="fas fa-check-circle"></i> 确认提交</h3>
+                                <p>请确认信息无误后提交</p>
+                            </div>
+                            <div class="confirmation-summary" id="confirmationSummary">
+                                <!-- 动态生成确认信息 -->
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                                    <span class="checkmark"></span>
+                                    我确认以上信息准确无误，并同意平台的使用条款
+                                </label>
+                                <div class="error-message" id="agreeTermsError"></div>
+                            </div>
+                        </div>
+
+                        <!-- 表单按钮 -->
+                        <div class="form-buttons">
+                            <button type="button" class="btn btn-secondary" id="prevBtn" style="display: none;">
+                                <i class="fas fa-arrow-left"></i>
+                                上一步
+                            </button>
+                            <button type="button" class="btn btn-primary" id="nextBtn">
+                                下一步
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">
+                                <i class="fas fa-paper-plane"></i>
+                                提交数据集
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 提交成功提示 -->
+        <div class="success-modal" id="successModal">
+            <div class="success-content">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>提交成功！</h3>
+                <p>您的数据集已成功提交，正在等待审核。我们会在3-5个工作日内完成审核并通知您。</p>
+                <div class="success-actions">
+                    <button class="btn btn-primary" onclick="location.href='datasets.html'">
+                        查看数据集列表
+                    </button>
+                    <button class="btn btn-secondary" onclick="location.href='index.html'">
+                        返回首页
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于我们</h3>
+                    <p>致力于单细胞组学数据共享与复现的开放平台</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="datasets.html">数据集列表</a></li>
+                        <li><a href="submit.html">提交数据</a></li>
+                        <li><a href="login.html">用户登录</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系方式</h3>
+                    <p>邮箱: contact@scrnaseq.org</p>
+                    <p>电话: +86-xxx-xxxx-xxxx</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 单细胞组学数据集平台. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="submit.js"></script>
+</body>
+</html>

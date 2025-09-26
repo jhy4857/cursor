@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据集列表 - 单细胞组学数据集平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="datasets.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 水波背景效果 -->
+    <div class="water-background">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-dna"></i>
+                <span>单细胞组学平台</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="datasets.html" class="nav-link active">数据集列表</a>
+                </li>
+                <li class="nav-item">
+                    <a href="submit.html" class="nav-link">提交数据集</a>
+                </li>
+                <li class="nav-item">
+                    <a href="login.html" class="nav-link">登录</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 页面标题区域 -->
+        <section class="page-header">
+            <div class="container">
+                <h1 class="page-title">数据集列表</h1>
+                <p class="page-subtitle">浏览和搜索单细胞组学数据集</p>
+            </div>
+        </section>
+
+        <!-- 搜索和筛选区域 -->
+        <section class="search-section">
+            <div class="container">
+                <div class="search-container">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="搜索数据集标题、作者或关键词...">
+                    </div>
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <label for="speciesFilter">物种:</label>
+                            <select id="speciesFilter">
+                                <option value="">全部</option>
+                                <option value="人类">人类</option>
+                                <option value="小鼠">小鼠</option>
+                                <option value="果蝇">果蝇</option>
+                                <option value="斑马鱼">斑马鱼</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="platformFilter">平台:</label>
+                            <select id="platformFilter">
+                                <option value="">全部</option>
+                                <option value="10X Genomics">10X Genomics</option>
+                                <option value="Smart-seq2">Smart-seq2</option>
+                                <option value="Drop-seq">Drop-seq</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="statusFilter">复现状态:</label>
+                            <select id="statusFilter">
+                                <option value="">全部</option>
+                                <option value="已复现">已复现</option>
+                                <option value="复现中">复现中</option>
+                                <option value="未复现">未复现</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="clearFilters">
+                            <i class="fas fa-times"></i>
+                            清除筛选
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据集表格区域 -->
+        <section class="datasets-section">
+            <div class="container">
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-controls">
+                            <div class="sort-controls">
+                                <label for="sortBy">排序方式:</label>
+                                <select id="sortBy">
+                                    <option value="year-desc">年份 (新到旧)</option>
+                                    <option value="year-asc">年份 (旧到新)</option>
+                                    <option value="title-asc">标题 (A-Z)</option>
+                                    <option value="title-desc">标题 (Z-A)</option>
+                                    <option value="cells-desc">细胞数 (多到少)</option>
+                                    <option value="cells-asc">细胞数 (少到多)</option>
+                                </select>
+                            </div>
+                            <div class="view-controls">
+                                <span class="results-count">显示 <span id="resultsCount">0</span> 个结果</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-wrapper">
+                        <table class="datasets-table" id="datasetsTable">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" data-sort="title">
+                                        数据集标题
+                                        <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="author">
+                                        作者
+                                        <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="year">
+                                        年份
+                                        <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th>DOI</th>
+                                    <th class="sortable" data-sort="species">
+                                        物种
+                                        <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="platform">
+                                        平台
+                                        <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="samples">
+                                        样本数
+                                        <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="cells">
+                                        细胞数
+                                        <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="status">
+                                        复现状态
+                                        <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="datasetsTableBody">
+                                <!-- 动态加载数据 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- 分页控件 -->
+                    <div class="pagination-container">
+                        <div class="pagination-info">
+                            <span>每页显示</span>
+                            <select id="pageSize">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                            <span>条记录</span>
+                        </div>
+                        <div class="pagination" id="pagination">
+                            <!-- 动态生成分页按钮 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于我们</h3>
+                    <p>致力于单细胞组学数据共享与复现的开放平台</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="datasets.html">数据集列表</a></li>
+                        <li><a href="submit.html">提交数据</a></li>
+                        <li><a href="login.html">用户登录</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系方式</h3>
+                    <p>邮箱: contact@scrnaseq.org</p>
+                    <p>电话: +86-xxx-xxxx-xxxx</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 单细胞组学数据集平台. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="datasets.js"></script>
+</body>
+</html>
