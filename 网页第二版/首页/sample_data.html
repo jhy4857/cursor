@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XY-Lab 数据展示平台</title>
+    <style>
+        :root {
+            /* 核心配色方案 */
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            
+            /* 状态颜色 */
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            
+            /* 中性色 */
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --border-light: #e5e7eb;
+            --bg-light: #f9fafb;
+            --white: #ffffff;
+            
+            /* 毛玻璃效果 */
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            
+            /* 响应式断点 */
+            --container-max-width: 1200px;
+            --mobile-breakpoint: 768px;
+            --tablet-breakpoint: 992px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.05)"/></svg>');
+            z-index: -1;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            height: 74px;
+        }
+
+        .nav-container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .logo {
+            font-size: clamp(1.5rem, 2vw, 2rem);
+            font-weight: bold;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+        }
+
+        /* 右上角按钮 */
+        .detail-btn {
+            text-decoration: none;
+            margin-left: 1rem;
+            padding: 0.55rem 1rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            font-weight: 600;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .detail-btn:hover {
+            background: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.2);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: calc(100vh - 74px);
+        }
+
+        /* 页面标题 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--white);
+        }
+
+        .page-title {
+            font-size: clamp(2rem, 4vw + 1rem, 3.6rem);
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-subtitle {
+            font-size: clamp(1rem, 1.1vw + 0.8rem, 1.35rem);
+            opacity: 0.9;
+        }
+
+        /* 数据表格部分 */
+        .data-section {
+            margin-bottom: 4rem;
+        }
+
+        /* 搜索栏样式 */
+        .search-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent;
+            border-radius: 25px;
+            padding: 1rem 1.5rem 1rem 3rem;
+            font-size: 1rem;
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: var(--white);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-gray);
+            opacity: 0.8;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-gray);
+            font-size: 1.2rem;
+            z-index: 2;
+        }
+
+        .clear-btn {
+            background: rgba(239, 68, 68, 0.9);
+            color: var(--white);
+            border: none;
+            border-radius: 20px;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .clear-btn:hover {
+            background: var(--danger-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .search-stats {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* 无结果提示 */
+        .no-results {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .no-results-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* 高亮搜索结果 */
+        .highlight {
+            background: linear-gradient(120deg, rgba(255, 235, 59, 0.8), rgba(255, 193, 7, 0.8));
+            padding: 0.1rem 0.2rem;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--white);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .table-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .data-table th {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.875rem;
+        }
+
+        .data-table td {
+            color: var(--white);
+            transition: background-color 0.3s ease;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* 状态标签 */
+        .status-tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-completed {
+            background: var(--success-color);
+            color: var(--white);
+        }
+
+        .status-pending {
+            background: var(--warning-color);
+            color: var(--white);
+        }
+
+        .status-failed {
+            background: var(--danger-color);
+            color: var(--white);
+        }
+
+        /* 图形卡片部分 */
+        .charts-section {
+            margin-bottom: 4rem;
+        }
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .chart-card {
+            flex: 0 0 auto;
+            width: 350px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-placeholder {
+            width: 200px;
+            height: 150px;
+            background: var(--primary-gradient);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: center;
+        }
+
+        /* 轮播控制按钮 */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .carousel-btn:hover {
+            background: var(--white);
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .carousel-btn.prev {
+            left: 1rem;
+        }
+
+        .carousel-btn.next {
+            right: 1rem;
+        }
+
+        /* 轮播指示器 */
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator.active {
+            background: var(--white);
+            transform: scale(1.2);
+        }
+
+        /* 动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .chart-card {
+                width: 300px;
+                height: 250px;
+            }
+
+            .chart-placeholder {
+                width: 150px;
+                height: 100px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.5rem;
+                font-size: 0.875rem;
+            }
+
+            .chart-card {
+                width: 280px;
+                height: 220px;
+            }
+
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chart-card {
+                width: 260px;
+                height: 200px;
+            }
+
+            .chart-placeholder {
+                width: 120px;
+                height: 80px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">XY-Lab</div>
+            <ul class="nav-links">
+                <li><a href="#data">数据表格</a></li>
+                <li><a href="#charts">图形展示</a></li>
+                <li><a href="#about">关于</a></li>
+            </ul>
+            <a class="detail-btn" href="datamax.html">详细表格</a>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <div class="container">
+        <!-- 页面标题 -->
+        <header class="page-header">
+            <h1 class="page-title">XY-Lab 数据平台</h1>
+            <p class="page-subtitle">展示实验室研究数据与可视化分析的科研平台</p>
+        </header>
+
+        <!-- 数据表格部分 -->
+        <section id="data" class="data-section">
+            <h2 class="section-title">研究数据表格</h2>
+            
+            <!-- 搜索栏 -->
+            <div class="search-container">
+                <div class="search-box">
+                    <div class="search-icon">🔍</div>
+                    <input type="text" class="search-input" id="searchInput" placeholder="搜索标题、作者、年份、期刊、物种、平台、样本数、细胞数、复现状态...">
+                    <button class="clear-btn" id="clearBtn">清除搜索</button>
+                </div>
+                <div class="search-stats" id="searchStats">显示全部 5 条数据</div>
+            </div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>标题</th>
+                            <th>作者</th>
+                            <th>年份</th>
+                            <th>期刊/DOI</th>
+                            <th>物种</th>
+                            <th>平台</th>
+                            <th>样本数</th>
+                            <th>细胞数</th>
+                            <th>复现状态</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody">
+                        <tr data-row="0">
+                            <td data-field="title">单细胞RNA测序揭示肿瘤微环境</td>
+                            <td data-field="author">张三, 李四</td>
+                            <td data-field="year">2023</td>
+                            <td data-field="journal">Nature Cell Biology<br>10.1038/s41556-023-01234</td>
+                            <td data-field="species">人类</td>
+                            <td data-field="platform">10x Genomics</td>
+                            <td data-field="samples">156</td>
+                            <td data-field="cells">45,632</td>
+                            <td data-field="status"><span class="status-tag status-completed">已完成</span></td>
+                        </tr>
+                        <tr data-row="1">
+                            <td data-field="title">神经发育中的细胞类型多样性</td>
+                            <td data-field="author">王五, 赵六</td>
+                            <td data-field="year">2023</td>
+                            <td data-field="journal">Cell<br>10.1016/j.cell.2023.05.012</td>
+                            <td data-field="species">小鼠</td>
+                            <td data-field="platform">Smart-seq2</td>
+                            <td data-field="samples">89</td>
+                            <td data-field="cells">12,456</td>
+                            <td data-field="status"><span class="status-tag status-pending">进行中</span></td>
+                        </tr>
+                        <tr data-row="2">
+                            <td data-field="title">免疫细胞在炎症中的作用机制</td>
+                            <td data-field="author">刘七, 陈八</td>
+                            <td data-field="year">2022</td>
+                            <td data-field="journal">Science<br>10.1126/science.abm5678</td>
+                            <td data-field="species">人类</td>
+                            <td data-field="platform">10x Genomics</td>
+                            <td data-field="samples">234</td>
+                            <td data-field="cells">78,923</td>
+                            <td data-field="status"><span class="status-tag status-completed">已完成</span></td>
+                        </tr>
+                        <tr data-row="3">
+                            <td data-field="title">干细胞分化的分子调控网络</td>
+                            <td data-field="author">孙九, 周十</td>
+                            <td data-field="year">2023</td>
+                            <td data-field="journal">Nature Methods<br>10.1038/s41592-023-01890</td>
+                            <td data-field="species">人类</td>
+                            <td data-field="platform">Drop-seq</td>
+                            <td data-field="samples">67</td>
+                            <td data-field="cells">23,789</td>
+                            <td data-field="status"><span class="status-tag status-failed">失败</span></td>
+                        </tr>
+                        <tr data-row="4">
+                            <td data-field="title">肌肉再生过程的单细胞图谱</td>
+                            <td data-field="author">吴十一, 郑十二</td>
+                            <td data-field="year">2023</td>
+                            <td data-field="journal">Cell Stem Cell<br>10.1016/j.stem.2023.08.003</td>
+                            <td data-field="species">小鼠</td>
+                            <td data-field="platform">10x Genomics</td>
+                            <td data-field="samples">123</td>
+                            <td data-field="cells">34,567</td>
+                            <td data-field="status"><span class="status-tag status-pending">进行中</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="no-results" id="noResults" style="display: none;">
+                    <div class="no-results-icon">🔍</div>
+                    <div>未找到匹配的数据</div>
+                    <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.7;">请尝试其他搜索关键词</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 图形卡片部分 -->
+        <section id="charts" class="charts-section">
+            <h2 class="section-title">数据可视化图表</h2>
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack">
+                    <div class="chart-card">
+                        <div class="chart-placeholder">
+                            📊 t-SNE 分析
+                        </div>
+                        <h3 class="chart-title">细胞类型聚类分析</h3>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-placeholder">
+                            📈 热图分析
+                        </div>
+                        <h3 class="chart-title">基因表达热图</h3>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-placeholder">
+                            🎯 UMAP 投影
+                        </div>
+                        <h3 class="chart-title">细胞状态轨迹</h3>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-placeholder">
+                            📋 小提琴图
+                        </div>
+                        <h3 class="chart-title">标记基因表达分布</h3>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-placeholder">
+                            🔬 散点图
+                        </div>
+                        <h3 class="chart-title">质量控制指标</h3>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-placeholder">
+                            📊 柱状图
+                        </div>
+                        <h3 class="chart-title">细胞数量统计</h3>
+                    </div>
+                </div>
+                <button class="carousel-btn prev" onclick="moveCarousel(-1)">‹</button>
+                <button class="carousel-btn next" onclick="moveCarousel(1)">›</button>
+                <div class="carousel-indicators" id="indicators"></div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 轮播图功能
+        let currentSlide = 0;
+        const track = document.getElementById('carouselTrack');
+        const cards = document.querySelectorAll('.chart-card');
+        const totalSlides = cards.length;
+        let cardsPerView = getCardsPerView();
+
+        // 根据屏幕尺寸确定每次显示的卡片数量
+        function getCardsPerView() {
+            if (window.innerWidth <= 480) return 1;
+            if (window.innerWidth <= 768) return 1;
+            if (window.innerWidth <= 992) return 2;
+            return 3;
+        }
+
+        // 创建指示器
+        function createIndicators() {
+            const indicatorsContainer = document.getElementById('indicators');
+            indicatorsContainer.innerHTML = '';
+            const totalIndicators = Math.ceil(totalSlides / cardsPerView);
+            
+            for (let i = 0; i < totalIndicators; i++) {
+                const indicator = document.createElement('div');
+                indicator.classList.add('indicator');
+                if (i === 0) indicator.classList.add('active');
+                indicator.addEventListener('click', () => goToSlide(i));
+                indicatorsContainer.appendChild(indicator);
+            }
+        }
+
+        // 移动轮播
+        function moveCarousel(direction) {
+            const maxSlides = Math.ceil(totalSlides / cardsPerView) - 1;
+            currentSlide += direction;
+            
+            if (currentSlide > maxSlides) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = maxSlides;
+            
+            updateCarousel();
+        }
+
+        // 跳转到指定幻灯片
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateCarousel();
+        }
+
+        // 更新轮播显示
+        function updateCarousel() {
+            const cardWidth = cards[0].offsetWidth + 32; // 包括gap
+            const translateX = -currentSlide * cardsPerView * cardWidth;
+            track.style.transform = `translateX(${translateX}px)`;
+            
+            // 更新指示器
+            document.querySelectorAll('.indicator').forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        // 响应式更新
+        function handleResize() {
+            const newCardsPerView = getCardsPerView();
+            if (newCardsPerView !== cardsPerView) {
+                cardsPerView = newCardsPerView;
+                currentSlide = 0;
+                createIndicators();
+                updateCarousel();
+            }
+        }
+
+        // 自动轮播
+        function autoSlide() {
+            const maxSlides = Math.ceil(totalSlides / cardsPerView) - 1;
+            currentSlide = currentSlide >= maxSlides ? 0 : currentSlide + 1;
+            updateCarousel();
+        }
+
+        // 初始化
+        function init() {
+            createIndicators();
+            updateCarousel();
+            
+            // 自动轮播（可选）
+            setInterval(autoSlide, 5000);
+            
+            // 监听窗口大小变化
+            window.addEventListener('resize', handleResize);
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+
+        // 平滑滚动到指定部分
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 添加滚动动画效果
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.data-section, .charts-section');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        }
+
+        // 初始化滚动动画
+        document.querySelectorAll('.data-section, .charts-section').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(30px)';
+            element.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        });
+
+        window.addEventListener('scroll', animateOnScroll);
+        document.addEventListener('DOMContentLoaded', animateOnScroll);
+    </script>
+</body>
+</html>

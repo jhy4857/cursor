@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XY-Lab 数据集管理平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部导航 */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* 主要内容区域 */
+        main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-card {
+            background: white;
+            margin: 2rem 0;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* 首页欢迎区域 */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* 搜索模块 */
+        .search-section {
+            margin-bottom: 2rem;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* 数据集网格布局 */
+        .dataset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .dataset-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #f0f0f0;
+        }
+
+        .dataset-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .dataset-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+
+        .dataset-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .dataset-meta {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .dataset-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background: #f8f9fa;
+            color: #667eea;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+
+        /* 表单样式 */
+        .form-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-help {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .file-upload {
+            border: 2px dashed #d0d0d0;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .file-upload.dragover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        /* 个人中心布局 */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            height: fit-content;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            color: #333;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .content-area {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .dashboard-section {
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        /* 通知样式 */
+        .notification {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 0 10px 10px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .notification-success {
+            border-left-color: #28a745;
+        }
+
+        .notification-warning {
+            border-left-color: #ffc107;
+        }
+
+        .notification-error {
+            border-left-color: #dc3545;
+        }
+
+        .notification-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .notification-time {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        /* FAQ样式 */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: white;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #f8f9fa;
+        }
+
+        .faq-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            display: none;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state img {
+            width: 120px;
+            opacity: 0.3;
+            margin-bottom: 1rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">🧬 XY-Lab</a>
+            <ul class="nav-links">
+                <li><a href="#" data-page="home" class="active">首页</a></li>
+                <li><a href="#" data-page="browse">数据集浏览</a></li>
+                <li><a href="#" data-page="submit">提交数据集</a></li>
+                <li><a href="#" data-page="profile">个人中心</a></li>
+                <li><a href="#" data-page="notifications">消息通知</a></li>
+                <li><a href="#" data-page="help">帮助中心</a></li>
+            </ul>
+            <div class="user-info">
+                <span>欢迎，研究员</span>
+                <div style="width: 35px; height: 35px; background: #667eea; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">U</div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- 首页 -->
+        <div id="home" class="page active">
+            <div class="hero">
+                <h1>XY-Lab 数据集管理平台</h1>
+                <p>汇聚科研数据资源，促进学术交流与合作</p>
+                <div class="hero-actions">
+                    <a href="#" class="btn btn-primary" data-page="browse">浏览数据集</a>
+                    <a href="#" class="btn btn-outline" data-page="submit">提交数据集</a>
+                </div>
+            </div>
+
+            <!-- 主要功能模块 -->
+            <div class="stats-grid">
+                <div class="stat-card" onclick="navigateToPage('browse')" style="cursor: pointer; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div class="stat-number">📊</div>
+                    <div class="stat-label">浏览数据集</div>
+                </div>
+                <div class="stat-card" onclick="navigateToPage('submit')" style="cursor: pointer; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div class="stat-number">📤</div>
+                    <div class="stat-label">提交数据集</div>
+                </div>
+            </div>
+
+            <!-- 快速搜索 -->
+            <div class="content-card">
+                <h2 style="margin-bottom: 1.5rem;">快速搜索数据集</h2>
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="搜索数据集标题、作者、物种或关键词...">
+                    <button class="btn btn-primary">搜索</button>
+                </div>
+            </div>
+
+            <!-- 个人中心 -->
+            <div class="content-card">
+                <h2 style="margin-bottom: 2rem;">个人中心</h2>
+                <div class="dataset-grid">
+                    <div class="dataset-card" onclick="navigateToPage('profile')" style="cursor: pointer;">
+                        <span class="dataset-status status-approved">我的数据集</span>
+                        <div class="dataset-title">查看和管理您提交的数据集</div>
+                        <div class="dataset-meta">
+                            已提交: 5个数据集<br>
+                            审核通过: 3个 | 待审核: 1个 | 已拒绝: 1个<br>
+                            最后更新: 2024-09-20
+                        </div>
+                        <div class="dataset-tags">
+                            <span class="tag">个人管理</span>
+                            <span class="tag">状态跟踪</span>
+                            <span class="tag">数据管理</span>
+                        </div>
+                    </div>
+
+                    <div class="dataset-card" onclick="navigateToPage('notifications')" style="cursor: pointer;">
+                        <span class="dataset-status status-pending">消息通知</span>
+                        <div class="dataset-title">查看系统通知和审核状态</div>
+                        <div class="dataset-meta">
+                            未读消息: 3条<br>
+                            审核通知: 1条 | 系统公告: 2条<br>
+                            最新消息: 1小时前
+                        </div>
+                        <div class="dataset-tags">
+                            <span class="tag">通知中心</span>
+                            <span class="tag">审核状态</span>
+                            <span class="tag">系统消息</span>
+                        </div>
+                    </div>
+
+                    <div class="dataset-card" onclick="navigateToPage('help')" style="cursor: pointer;">
+                        <span class="dataset-status status-approved">帮助中心</span>
+                        <div class="dataset-title">常见问题与使用指南</div>
+                        <div class="dataset-meta">
+                            FAQ问题: 15个<br>
+                            使用教程: 8篇 | 操作指南: 5篇<br>
+                            最后更新: 2024-09-18
+                        </div>
+                        <div class="dataset-tags">
+                            <span class="tag">使用帮助</span>
+                            <span class="tag">常见问题</span>
+                            <span class="tag">操作指南</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据集浏览页面 -->
+        <div id="browse" class="page">
+            <div class="content-card">
+                <h1 style="margin-bottom: 2rem;">数据集浏览与搜索</h1>
+                
+                <div class="search-section">
+                    <div class="search-container">
+                        <input type="text" class="search-input" id="searchInput" placeholder="输入关键词搜索数据集...">
+                        <button class="btn btn-primary" onclick="searchDatasets()">搜索</button>
+                    </div>
+
+                    <div class="search-filters">
+                        <select class="filter-select" id="statusFilter">
+                            <option value="">全部状态</option>
+                            <option value="approved">已审核</option>
+                            <option value="pending">待审核</option>
+                            <option value="rejected">已拒绝</option>
+                        </select>
+                        <select class="filter-select" id="speciesFilter">
+                            <option value="">全部物种</option>
+                            <option value="human">Homo sapiens</option>
+                            <option value="mouse">Mus musculus</option>
+                            <option value="fly">Drosophila melanogaster</option>
+                        </select>
+                        <select class="filter-select" id="yearFilter">
+                            <option value="">全部年份</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                        </select>
+                        <select class="filter-select" id="sortBy">
+                            <option value="latest">最新发布</option>
+                            <option value="popular">最受欢迎</option>
+                            <option value="title">按标题排序</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="searchResults" class="dataset-grid">
+                    <!-- 搜索结果将在这里显示 -->
+                </div>
+
+                <div id="loadingIndicator" style="text-align: center; padding: 2rem; display: none;">
+                    <div class="loading"></div>
+                    <p style="margin-top: 1rem;">搜索中...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据集提交页面 -->
+        <div id="submit" class="page">
+            <div class="content-card">
+                <div class="form-section">
+                    <h1 style="text-align: center; margin-bottom: 2rem;">提交数据集</h1>
+                    
+                    <form id="datasetSubmitForm">
+                        <div class="form-group">
+                            <label class="form-label">数据集标题 *</label>
+                            <input type="text" class="form-input" id="datasetTitle" required placeholder="请输入数据集标题">
+                            <div class="form-help">请使用简洁明确的标题描述您的数据集</div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">作者姓名 *</label>
+                                <input type="text" class="form-input" id="authorName" required placeholder="请输入作者姓名">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">发表年份 *</label>
+                                <input type="number" class="form-input" id="publishYear" required min="2000" max="2025" placeholder="2024">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">数据集描述 *</label>
+                            <textarea class="form-textarea" id="datasetDescription" required placeholder="请详细描述数据集的内容、实验设计、研究目标等..."></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">实验物种 *</label>
+                                <select class="form-select" id="species" required>
+                                    <option value="">请选择物种</option>
+                                    <option value="human">Homo sapiens (人类)</option>
+                                    <option value="mouse">Mus musculus (小鼠)</option>
+                                    <option value="fly">Drosophila melanogaster (果蝇)</option>
+                                    <option value="other">其他</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">实验平台</label>
+                                <input type="text" class="form-input" id="platform" placeholder="如：10x Genomics, Illumina HiSeq">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">样本数量</label>
+                                <input type="number" class="form-input" id="sampleCount" min="1" placeholder="样本总数">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">期刊名称</label>
+                                <input type="text" class="form-input" id="journal" placeholder="如：Nature, Cell, Science">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">关键词</label>
+                            <input type="text" class="form-input" id="keywords" placeholder="用逗号分隔多个关键词">
+                            <div class="form-help">便于其他研究者搜索和发现您的数据集</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">数据文件上传</label>
+                            <div class="file-upload" id="dataUpload">
+                                <div>📁 点击或拖拽文件到此处上传</div>
+                                <div style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">
+                                    支持 .csv, .xlsx, .h5, .zip 等格式，单文件最大50MB
+                                </div>
+                                <input type="file" id="dataFiles" multiple style="display: none;" accept=".csv,.xlsx,.h5,.zip,.tar.gz">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">相关链接</label>
+                            <input type="url" class="form-input" id="relatedLinks" placeholder="https://doi.org/... (文献链接、代码仓库等)">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">备注信息</label>
+                            <textarea class="form-textarea" id="notes" placeholder="其他需要说明的信息..."></textarea>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 2rem;">
+                            <button type="button" class="btn btn-outline" style="margin-right: 1rem;">保存草稿</button>
+                            <button type="submit" class="btn btn-primary">提交审核</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 个人中心页面 -->
+        <div id="profile" class="page">
+            <h1 style="color: white; margin-bottom: 2rem;">个人中心</h1>
+            <div class="dashboard">
+                <div class="sidebar">
+                    <ul class="sidebar-menu">
+                        <li><a href="#" class="active" data-section="my-datasets">我的数据集</a></li>
+                        <li><a href="#" data-section="account-settings">账户设置</a></li>
+                        <li><a href="#" data-section="statistics">统计信息</a></li>
+                    </ul>
+                </div>
+                
+                <div class="content-area">
+                    <div id="my-datasets" class="dashboard-section active">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                            <h2>我提交的数据集</h2>
+                            <a href="#" class="
+
